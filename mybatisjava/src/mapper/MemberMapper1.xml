@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--/mybatisjava/src/mapper/MemberMapper1.xml-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<select id="count" resultType="int">
+	<!-- member에 속해있는 count(진짜이름 member.count), 실행결과는 정수(Integer 객체임) -->
+		select count(*) from member
+	</select>
+	<!--main.Member를 결과객체로 사용할거야 -->
+	<!-- id가 list인 이우는 Main1에서 List<Member> list로 썼기때문...? -->
+	<!--프로퍼티로 파라미터 받음? 
+		mybatis가 user명이랑 컬럼명 같은거 찾아서 setProperty 호출?
+		Member객체와 컬럼명 다르면 알리야스 써서 넣어줌
+		dao에 있는 mem.setId(rs.getString("id")) -->
+	<!-- member객체를 만들어서 list로 전송 -->
+	<select id="list" resultType="main.Member">
+		select * from member
+	</select>
+	<!-- 패키이름 풀로 써야함 -->
+	<!-- string type으로 받고 member로 전달할게? -->
+	<select id="selectid" resultType="Member" parameterType="string">
+		select * from member where id=#{value}
+	</select>	
+	<!-- 
+		#{value} : value의 자료형이 문자열이면 '값'으로 처리함.
+		#{value} : value의 자료형이 숫자라면 값으로 처리함.
+		자료형 + 값
+		파라미터 : "%스%" : name like '%스%'
+		
+		${value} : 값만 치환 . 문자인 경우 코딩에서 '' 표시해야 함
+		파라미터 : "스" : name like '%스%'
+	 -->
+	<select id="selectname" resultType="Member" parameterType="string" >
+		select * from member where name like #{value}
+	</select>
+	<select id="selectname2" resultType="Member" parameterType="string" >
+		select * from member where name like '%${value}%'
+	</select>
+	<select id="selectgender" resultType="Member" parameterType="integer" >
+		select * from member where gender like #{value}
+	</select>
+	<!-- map 객체 파라미터 
+		 #{map 객체의 key} => map 객체의 value 값으로 치환
+	     ${name} 은 키값 
+	-->
+	<select id="selectnamegender" resultType="Member" parameterType="map" >
+		select * from member where name like '%${name}%' and gender = #{gender}
+	</select>
+	
+</mapper>
